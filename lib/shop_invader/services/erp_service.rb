@@ -1,6 +1,8 @@
 module ShopInvader
   class ErpService
     FORWARD_HEADER = %w(ACCEPT ACCEPT_ENCODING ACCEPT_LANGUAGE HOST REFERER ACCEPT USER_AGENT)
+    UTM_KEY = %w(source medium term content campaign from time lp)
+
     attr_reader :client
     attr_reader :session
 
@@ -149,6 +151,12 @@ module ShopInvader
        end
     end
 
+    def add_utm_header(request, headers)
+      UTM_KEY.each do | key |
+        headers["utm_#{key}".to_sym] = request.env["utm.#{key}"]
+      end
+    end
+
     def add_client_header(request, headers)
       FORWARD_HEADER.each do | key |
         headers["invader_client_#{key.downcase()}".to_sym] = request.get_header("HTTP_#{key}")
@@ -161,6 +169,7 @@ module ShopInvader
         api_key: @site.metafields['erp']['api_key'],
         accept_language: ShopInvader::LOCALES[locale.to_s],
       }
+      add_utm_header(request, headers)
       add_client_header(request, headers)
       add_header_info_from_session(headers)
       if @customer && @customer.email

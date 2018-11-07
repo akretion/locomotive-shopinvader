@@ -5,6 +5,7 @@ gemspec
 
 gem 'locomotivecms_steam', github: 'akretion/steam', branch: 'v1.4.x.shopinvader'
 gem 'faraday'
+gem 'rack-utm'
 
 group :test do
   gem 'simplecov',      require: false
