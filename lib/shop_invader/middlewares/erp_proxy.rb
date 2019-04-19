@@ -2,7 +2,7 @@ module ShopInvader
   module Middlewares
     class ErpProxy < Locomotive::Steam::Middlewares::ThreadSafe
 
-      include Locomotive::Steam::Middlewares::Helpers
+      include Locomotive::Steam::Middlewares::Concerns::Helpers
 
       def _call
         if env['steam.path'].start_with?('_store/')

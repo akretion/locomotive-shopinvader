@@ -2,7 +2,7 @@ module ShopInvader
   module Middlewares
     class TemplatizedPage < Locomotive::Steam::Middlewares::ThreadSafe
 
-      include Locomotive::Steam::Middlewares::Helpers
+      include Locomotive::Steam::Middlewares::Concerns::Helpers
 
       def _call
         if env['steam.page'].not_found? && resource = find_resource

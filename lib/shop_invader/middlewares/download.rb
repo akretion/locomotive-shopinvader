@@ -2,7 +2,7 @@ module ShopInvader
   module Middlewares
     class Download < Locomotive::Steam::Middlewares::ThreadSafe
 
-      include Locomotive::Steam::Middlewares::Helpers
+      include Locomotive::Steam::Middlewares::Concerns::Helpers
 
       BASE_STRING = '/_store/download/'.freeze
       PATH_REGEXP = /#{BASE_STRING}(.*)/mo.freeze
