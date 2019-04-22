@@ -1,5 +1,6 @@
 require 'locomotive/common'
 require 'locomotive/steam'
+require 'pg'
 
 module Spec
   module Helpers
@@ -80,6 +81,19 @@ module Spec
 
     def session
       last_request.env['rack.session']
+    end
+
+    def xml2id(xml_id)
+      conn = PG.connect
+      res = conn.exec_params(
+        "SELECT res_id FROM ir_model_data WHERE module=$1 and name=$2",
+        xml_id.split('.'))
+      res[0]['res_id'].to_i
+    end
+
+    def add_item_to_cart(product_xml_id)
+      product_id = xml2id(product_xml_id)
+      post '/invader/cart/add_item', { product_id: product_id, item_qty: 1 }
     end
 
   end

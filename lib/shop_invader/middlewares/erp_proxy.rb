@@ -3,10 +3,17 @@ module ShopInvader
     class ErpProxy < Locomotive::Steam::Middlewares::ThreadSafe
 
       include Locomotive::Steam::Middlewares::Concerns::Helpers
+      include Locomotive::Steam::Middlewares::Concerns::Recaptcha
 
       def _call
         if env['steam.path'].start_with?('invader/')
-          path = env['steam.path'].sub('invader/', '')
+          if recaptcha_proxy_required? && !recaptcha_proxy_valid?
+            if html_form_edition
+              redirect_to params['invader_error_url'], 302
+            else
+              render_response("{'recaptcha_invalid': true}", 200, 'application/json')
+            end
+          end
           response = erp.call_without_parsing(env['REQUEST_METHOD'], path, params)
           if response.status == 200 && response.headers["content-type"] != "application/json"
             _render_download(response)
@@ -63,6 +70,14 @@ module ShopInvader
       end
 
       private
+
+      def recaptcha_required?
+        ['PUT', 'POST'].include?(env['REQUEST_METHOD']) && recaptcha_procy_protected
+      end
+
+      def path
+        @path |= env['steam.path'].sub('invader/', '')
+      end
 
       def force_redirection
         # the check_payment path always need to render an html page
