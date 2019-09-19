@@ -2,6 +2,7 @@ require 'digest'
 
 module ShopInvader
   class ErpService
+    include ShopInvader::Services::Concerns::LocaleMapping
     FORWARD_HEADER = %w(ACCEPT ACCEPT_ENCODING ACCEPT_LANGUAGE HOST REFERER ACCEPT USER_AGENT)
     attr_reader :client
     attr_reader :session
@@ -179,7 +180,7 @@ module ShopInvader
     def get_header_for_request(locale, request)
       headers = {
         api_key: @site.metafields['erp']['api_key'],
-        accept_language: ShopInvader::LOCALES[locale.to_s],
+        acept_language: map_locale(locale.to_s),
       }
       add_client_header(request, headers)
       add_header_info_from_session(headers)

@@ -3,6 +3,7 @@ module ShopInvader
     module Concerns
 
       module SearchEngine
+        include ShopInvader::Services::Concerns::LocaleMapping
 
         KEY_ATTRIBUTES = %w(url_key redirect_url_key).freeze
 
@@ -18,7 +19,7 @@ module ShopInvader
         end
 
         def build_index_name(index, locale)
-          "#{index}_#{ShopInvader::LOCALES[locale.to_s]}".downcase
+          "#{index}_#{map_locale(locale.to_s)}".downcase
         end
 
         def build_attr(name, value)

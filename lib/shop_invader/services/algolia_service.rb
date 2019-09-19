@@ -39,9 +39,8 @@ module ShopInvader
       indices.map do |config|
         {}.tap do |records|
           site.locales.each do |locale|
-            index   = Algolia::Index.new("#{config['index']}_#{ShopInvader::LOCALES[locale.to_s]}", @client)
+            index   = Algolia::Index.new(build_index_name(config['index'], locale.to_s), @client)
             filters = ''
-
             if config['have_variant']
                 filter = 'main: true'
             end
@@ -140,7 +139,7 @@ module ShopInvader
     # as we want to keep the case sensitive
     # will be removed soon
     def build_index_name(index, locale)
-      "#{index}_#{ShopInvader::LOCALES[locale.to_s]}"
+      "#{index}_#{map_locale(locale.to_s)}"
     end
 
     def find_route(index_name)

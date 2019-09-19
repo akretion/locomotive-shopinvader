@@ -18,6 +18,25 @@ RSpec.describe ShopInvader::AlgoliaService do
   let(:locale)    { 'fr' }
   let(:service)   { described_class.new(site, customer, locale) }
 
+  describe '#build_index_name for local fr' do
+
+    subject { service.send(:build_index_name, 'shopinvader_variant', 'fr') }
+
+    it 'returns the index with the lang fr_FR' do
+      expect(subject).to eq('shopinvader_variant_fr_FR')
+    end
+
+    context "with specific lang mapping for Belgium" do
+
+      let(:metafields) { {'_store' => {'locale_mapping' => '{"fr": "fr_BE"}'}} }
+
+      it 'return the index with the lang fr_be' do
+        expect(subject).to eq('shopinvader_variant_fr_BE')
+      end
+
+    end
+  end
+
   describe 'Building params from condition' do
     subject { service.send(:build_params, conditions) }
 

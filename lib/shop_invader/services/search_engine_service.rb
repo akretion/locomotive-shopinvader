@@ -3,7 +3,6 @@ module ShopInvader
     attr_reader :adapter
 
     def initialize(site, locale, elastic, algolia)
-      @locale    = ShopInvader::LOCALES[locale.to_s]
       if elastic.is_configured?
         @adapter = elastic
       elsif algolia.is_configured?
