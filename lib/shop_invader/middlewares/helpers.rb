@@ -65,7 +65,7 @@ module Locomotive::Steam
         end
 
         def is_erp_connected_site
-          site.metafields.include?('erp')
+          site.metafields && site.metafields.include?('erp')
         end
 
         def is_index_page?
